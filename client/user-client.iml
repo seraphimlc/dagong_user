@@ -28,8 +28,6 @@ under the License.
       <!-- sourceFolder url="file://$$MODULE_DIR$$/${pom.build.sourceDirectory}" isTestSource="false"/ -->  
       <!-- sourceFolder url="file://$$MODULE_DIR$$/${pom.build.testSourceDirectory}" isTestSource="true"/ -->  
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false"/>
-      <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true"/>
-      <sourceFolder url="file://$MODULE_DIR$/src/main/resources" isTestSource="false"/>
       <excludeFolder url="file://$MODULE_DIR$/target"/>
     </content>  
     <orderEntry type="sourceFolder" forTests="false"/>  
@@ -50,7 +48,7 @@ under the License.
     <orderEntry type="module-library" exported=""> 
       <library> 
         <SOURCES> 
-          <root url="jar:///Users/liuchang/.m2/repository/javax/validation/validation-api/1.1.0.Final/validation-api-1.1.0.Final-sources.jar!/"/>
+          <root url="jar:///Users/liuchang/.m2/repository/javax/validation/validation-api/1.1.0.Final/validation-api-1.1.0.Final-sources.jar!/"/> 
         </SOURCES>  
         <CLASSES>
           <root url="jar:///Users/liuchang/.m2/repository/javax/validation/validation-api/1.1.0.Final/validation-api-1.1.0.Final.jar!/"/>

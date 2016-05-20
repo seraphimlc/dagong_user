@@ -29,6 +29,7 @@
     <bytecodeTargetLevel target="1.8">
       <module name="client" target="1.8" />
       <module name="dagong" target="1.8" />
+      <module name="dagong-user" target="1.8" />
       <module name="service" target="1.8" />
     </bytecodeTargetLevel>
   </component>

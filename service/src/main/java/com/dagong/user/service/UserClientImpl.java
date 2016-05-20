@@ -8,6 +8,7 @@ import com.dagong.pojo.*;
 import com.dagong.user.UserClient;
 import com.dagong.user.vo.UserVO;
 import com.dagong.user.vo.WechatUserVO;
+import com.dagong.util.BeanUtil;
 import com.dagong.util.IdGenerator;
 import com.google.common.base.Joiner;
 import org.apache.commons.beanutils.BeanUtils;
@@ -58,24 +59,16 @@ public class UserClientImpl implements UserClient {
         if (wechatUserVO == null) {
             return null;
         }
-        try {
-            WechatUser wechatUser = new WechatUser();
-            User user = new User();
-            BeanUtils.copyProperties(wechatUser, wechatUserVO);
-            String userId = idGenerator.generate(User.class.getSimpleName());
-            user.setId(userId);
-            user.setOpenId(wechatUserVO.getOpenid());
-            user.setUserType(USER_TYPE_WECHAT);
-            wechatUserMapper.insert(wechatUser);
-            userMapper.insert(user);
+        User user = new User();
+        WechatUser wechatUser = BeanUtil.getVO(wechatUserVO, WechatUser.class);
+        String userId = idGenerator.generate(User.class.getSimpleName());
+        user.setId(userId);
+        user.setOpenId(wechatUserVO.getOpenid());
+        user.setUserType(USER_TYPE_WECHAT);
+        wechatUserMapper.insert(wechatUser);
+        userMapper.insert(user);
+        return userId;
 
-            return userId;
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
 
@@ -84,15 +77,7 @@ public class UserClientImpl implements UserClient {
         if (user == null) {
             return null;
         }
-        UserVO userVO = new UserVO();
-        try {
-            BeanUtils.copyProperties(userVO, user);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
-        return userVO;
+        return BeanUtil.getVO(user,UserVO.class);
     }
 
     public boolean cacheUser(String userId) {
