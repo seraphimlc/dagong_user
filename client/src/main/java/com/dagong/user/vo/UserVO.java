@@ -21,7 +21,7 @@ public class UserVO implements Serializable{
     private String email;
 
     @NotNull
-    private long brithday;
+    private long birthday;
 
     @Pattern(regexp="\\d{17}([0-9]|x)")
     private String cardId;
@@ -86,12 +86,12 @@ public class UserVO implements Serializable{
         this.email = email == null ? null : email.trim();
     }
 
-    public long getBrithday() {
-        return brithday;
+    public long getBirthday() {
+        return birthday;
     }
 
-    public void setBrithday(long brithday) {
-        this.brithday = brithday;
+    public void setBirthday(long birthday) {
+        this.birthday = birthday;
     }
 
     public String getCardId() {
@@ -122,20 +122,5 @@ public class UserVO implements Serializable{
 
     }
 
-    @Override
-    public String toString() {
-        return "UserVO{" +
-                "id='" + id + '\'' +
-                ", userName='" + userName + '\'' +
-                ", password='" + password + '\'' +
-                ", phone='" + phone + '\'' +
-                ", wechat='" + wechat + '\'' +
-                ", qq='" + qq + '\'' +
-                ", email='" + email + '\'' +
-                ", brithday=" + brithday +
-                ", cardId='" + cardId + '\'' +
-                ", name='" + name + '\'' +
-                ", gender=" + gender +
-                '}';
-    }
+
 }
