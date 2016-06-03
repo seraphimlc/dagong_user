@@ -1,4 +1,3 @@
 com/dagong/user/UserClient.class
-com/dagong/user/vo/UserVO.class
-com/dagong/user/TestUserClient.class
 com/dagong/user/vo/WechatUserVO.class
+com/dagong/user/vo/UserVO.class
