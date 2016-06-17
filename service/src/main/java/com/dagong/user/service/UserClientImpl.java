@@ -5,15 +5,13 @@ package com.dagong.user.service;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.dagong.mapper.*;
 import com.dagong.pojo.*;
+import com.dagong.service.RedisService;
 import com.dagong.user.UserClient;
 import com.dagong.user.vo.UserVO;
 import com.dagong.user.vo.WechatUserVO;
 import com.dagong.util.BeanUtil;
 import com.dagong.util.IdGenerator;
-import com.google.common.base.Joiner;
 import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.codec.binary.StringUtils;
-import org.springframework.transaction.annotation.Transactional;
 import redis.clients.jedis.Jedis;
 
 import javax.annotation.Resource;
@@ -46,13 +44,9 @@ public class UserClientImpl implements UserClient {
 
     private static int USER_TYPE_WECHAT = 1;
 
-    private static Jedis jedisClient = null;
+    @Resource
+    private RedisService redisService;
 
-
-    public UserClientImpl() {
-        jedisClient = new Jedis("172.16.54.144", 6379);
-        jedisClient.select(2);
-    }
 
     //@Transactional
     public String createWechatUser(WechatUserVO wechatUserVO) {
@@ -77,10 +71,11 @@ public class UserClientImpl implements UserClient {
         if (user == null) {
             return null;
         }
-        return BeanUtil.getVO(user,UserVO.class);
+        return BeanUtil.getVO(user, UserVO.class);
     }
 
     public boolean cacheUser(String userId) {
+        Jedis jedis = redisService.getJedis();
         User user = userMapper.selectByPrimaryKey(userId);
         if (user == null) {
             return false;
@@ -100,7 +95,7 @@ public class UserClientImpl implements UserClient {
             emptyList.forEach(value -> {
                 stringMap.remove(value);
             });
-            jedisClient.hmset(userId, stringMap);
+            jedis.hmset(userId, stringMap);
             List<WantJob> wantJobs = wantJobMapper.selectByUserId(userId);
             List<WantEnvironment> wantEnvironments = wantEnvironmentMapper.selectByUserId(userId);
             List<WantInformation> wantInformations = wantInformationMapper.selectByUserId(userId);
@@ -140,8 +135,9 @@ public class UserClientImpl implements UserClient {
 
 
             if (!infoMap.isEmpty()) {
-                jedisClient.hmset(userId + "_info", infoMap);
+                jedis.hmset(userId + "_info", infoMap);
             }
+
             return true;
 
         } catch (IllegalAccessException e) {
@@ -150,16 +146,19 @@ public class UserClientImpl implements UserClient {
             e.printStackTrace();
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
+        }finally {
+            jedis.close();
         }
         return false;
     }
 
 
     public UserVO getUserByUserId(String userId) {
-        Map map = jedisClient.hgetAll(userId);
+        Jedis jedis = redisService.getJedis();
+        Map map = jedis.hgetAll(userId);
         if (map == null || map.isEmpty()) {
             if (cacheUser(userId)) {
-                map = jedisClient.hgetAll(userId);
+                map = jedis.hgetAll(userId);
             }
         }
 
@@ -183,13 +182,14 @@ public class UserClientImpl implements UserClient {
 
 
     public Map<String, Object> getUserInfo(String userId) {
-        Map map = jedisClient.hgetAll(userId + "_info");
+        Jedis jedis = redisService.getJedis();
+        Map map = jedis.hgetAll(userId + "_info");
         if (map == null || map.isEmpty()) {
             if (cacheUser(userId)) {
-                map = jedisClient.hgetAll(userId + "_info");
+                map = jedis.hgetAll(userId + "_info");
             }
         }
-
+        jedis.close();
         return map;
     }
 
